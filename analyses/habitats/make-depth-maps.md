@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0ee1d53afa99b65e059f2db5c1d8dd413ebb7893
 # Coastal Relief Model Bathymetry Maps at Multiple Resolutions
 
 **Author:** Holden Harris  
@@ -19,6 +22,7 @@ rm(list = ls()); graphics.off(); gc()
 library(raster)
 library(sp)
 library(rgdal)
+<<<<<<< HEAD
 ```
 
 ---
@@ -120,3 +124,5 @@ writeRaster(crm.agg6, paste0(dir.out, 'crm ', dim(crm.agg6)[1],'x',dim(crm.agg6)
 - Bathymetry data from the Coastal Relief Model was cleaned and scaled to positive depths.
 - Raster resolution was aggregated from 3 seconds (approx. 90m) up to 18 seconds (approx. 540m).
 - These maps are formatted for use in Ecospace to test the impact of spatial resolution on ecosystem dynamics.
+=======
+>>>>>>> 0ee1d53afa99b65e059f2db5c1d8dd413ebb7893
