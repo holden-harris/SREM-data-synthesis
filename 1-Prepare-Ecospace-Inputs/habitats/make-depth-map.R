@@ -41,6 +41,7 @@ dist5 = pointDistance(coordinates(crm.agg5)[1:2,],longlat=T)
 dist6 = pointDistance(coordinates(crm.agg6)[1:2,],longlat=T)
 
 #plots
+png("./0-Data/habitats/plots/crm-resolutions.png", height = 9, width = 6.5, units = "in", res = 300)
 par(mfrow=c(3,2))
 plot(crm,colNA='black',main=paste0('3 sec / ',round(dist1[2,1]),' m / ',dim(crm)[1],'x',dim(crm)[2]))
 plot(crm.agg2,colNA='black',main=paste0('6 sec / ',round(dist2[2,1]),' m / ',dim(crm.agg2)[1],'x',dim(crm.agg2)[2]))
@@ -48,6 +49,7 @@ plot(crm.agg3,colNA='black',main=paste0('9 sec / ',round(dist3[2,1]),' m / ',dim
 plot(crm.agg4,colNA='black',main=paste0('12 sec / ',round(dist4[2,1]),' m / ',dim(crm.agg4)[1],'x',dim(crm.agg4)[2]))
 plot(crm.agg5,colNA='black',main=paste0('15 sec / ',round(dist5[2,1]),' m / ',dim(crm.agg5)[1],'x',dim(crm.agg5)[2]))
 plot(crm.agg6,colNA='black',main=paste0('18 sec / ',round(dist6[2,1]),' m / ',dim(crm.agg6)[1],'x',dim(crm.agg6)[2]))
+dev.off()
 
 par(mfrow=c(1,1))
 plot(crm.agg6,colNA='black',main=paste0('18 sec / ',round(dist6[2,1]),' m / ',dim(crm.agg6)[1],'x',dim(crm.agg6)[2]))
