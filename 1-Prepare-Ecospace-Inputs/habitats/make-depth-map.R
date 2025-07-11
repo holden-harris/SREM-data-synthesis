@@ -4,8 +4,6 @@ library(raster)
 library(sp)
 library(rgdal)
 
-bbox = c(29.40,29.05,-83.3,-82.95) ## Bounding box
-
 #read and summarize bathymetry data from coastal relief model
 dir.in = "./0-Data/habitats/inputs/"
 crm    = raster(paste0(dir.in, "coastal-relief-map.tiff"))
