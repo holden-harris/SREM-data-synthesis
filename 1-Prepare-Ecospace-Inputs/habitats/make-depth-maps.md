@@ -1,11 +1,4 @@
-<<<<<<< HEAD
-
-=======
->>>>>>> 0ee1d53afa99b65e059f2db5c1d8dd413ebb7893
 # Coastal Relief Model Bathymetry Maps at Multiple Resolutions
-
-**Author:** Holden Harris  
-**Date:** `r Sys.Date()`
 
 ---
 
@@ -27,22 +20,9 @@ library(rgdal)
 
 ---
 
-## Define Region of Interest
-
-Although not directly used, a bounding box is defined:
-
-```r
-bbox <- c(29.40, 29.05, -83.3, -82.95)
-```
-
----
-
 ## Load and Preprocess Bathymetry
 
 ```r
-dir <- "./analyses/habitats/data/"
-crm <- raster(paste0(dir, "exportImage.tiff"))
-
 # Replace land elevations (positive values) with NA
 crm[crm > 0] <- NA
 
@@ -125,4 +105,3 @@ writeRaster(crm.agg6, paste0(dir.out, 'crm ', dim(crm.agg6)[1],'x',dim(crm.agg6)
 - Raster resolution was aggregated from 3 seconds (approx. 90m) up to 18 seconds (approx. 540m).
 - These maps are formatted for use in Ecospace to test the impact of spatial resolution on ecosystem dynamics.
 =======
->>>>>>> 0ee1d53afa99b65e059f2db5c1d8dd413ebb7893
