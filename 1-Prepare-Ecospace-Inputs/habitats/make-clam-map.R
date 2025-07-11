@@ -6,7 +6,7 @@ library(rgeos)
 library(sf)
 
 ## Import shape file
-shp.clams = shapefile("./analyses/habitats/data/FDACs clams data/Suwannee_River_AUZs.shp")
+shp.clams = shapefile("./0-Data/habitats/inputs/FDACs-clams-data/Suwannee_River_AUZs.shp")
 shp.clams
 plot(shp.clams)
 
