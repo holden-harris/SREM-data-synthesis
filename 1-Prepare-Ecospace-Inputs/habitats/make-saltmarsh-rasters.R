@@ -1,7 +1,7 @@
 rm(list=ls());graphics.off();rm(.SavedPlots);gc();windows(record=T)
 library('raster')
 
-dir.maps <- "./analyses/habitats/data/"
+dir.maps <- "./0-Data/habitats/processed/crm-resolutions/"
 
 dir.subs = list.dirs(dir.maps,recursive=F)
 
@@ -9,7 +9,7 @@ par(mfrow=c(4,3),mar=c(1,1,1,1))
 depth = raster(paste0(dir.maps,"crm 60x50 18s 485m"))
 depth.hires = raster(paste0(dir.maps,"crm 360x300 3s 81m"))
 
-shp = shapefile(paste0(dir.maps, "Suwanee_River_Water_Management_District_(SRWMD)_2016-2017_Land_Use.shp"))
+shp = shapefile(paste0("0-Data/habitats/inputs/SWMD-land-use/SRWMD_2016-2017_Land_Use.shp"))
 sort(unique(shp$LEVEL_3_DE))
 
 plot(depth,colNA='black')
