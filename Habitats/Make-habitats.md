@@ -82,7 +82,6 @@ Polygons originate from the **SRWMD 2016–2017 Land Use** dataset (distributed 
   `saltmarsh SRWMD 2016-2017 60x50 - presence.asc`
 - Proportion (0–1), via bilinear downsampling from 3″ to 18″:  
   `saltmarsh SRWMD 2016-2017 60x50 - bilinear resampled.asc`
-**Code:** `make-saltmarsh-rasters.R`
 
 ---
 
@@ -181,6 +180,3 @@ available for viewing at
   <https://geodata.dep.state.fl.us/>  
 - Florida Department of Agriculture and Consumer Services (FDACS). *Shellfish Harvesting Areas and Aquaculture Lease Map.*  
   <https://www.fdacs.gov/Agriculture-Industry/Aquaculture/Shellfish-Harvesting-Area-and-Aquaculture-Lease-Map>  
-
-
-
