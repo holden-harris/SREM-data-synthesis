@@ -1,9 +1,9 @@
 # Water Quality Data Synthesis (Suwannee Estuary)
 
-## Purpose
-Compile, harmonize, and summarize water-quality observations from seven monitoring sources into daily and monthly datasets (with river‐flow covariates) for use in Ecospace spatial–temporal driver maps and model fitting.
+### Purpose
+Compile, harmonize, and summarize water-quality observations from seven monitoring sources into daily and monthly datasets (with river-flow covariates) for use in Ecospace spatial–temporal driver maps and model fitting.
 
-## Outputs (written by the script)
+### Outputs (written by the script)
 
 | Output File | Description |
 |--------------|-------------|
@@ -17,28 +17,30 @@ Compile, harmonize, and summarize water-quality observations from seven monitori
 
 ## Data sources
 
-1. [**FDACS — Florida Department of Agriculture and Consumer Services (shellfish sanitation water quality)**](https://www.fdacs.gov/Agriculture-Industry/Aquaculture/Shellfish)
-   The Division of Aquaculture within FDACS classifies and monitors shellfish-harvesting areas under Florida’s implementation of the National Shellfish Sanitation Program. Monitoring includes bacteriological (e.g., fecal coliform) sampling, area closures, and certification of processing plants. [FDACS Shellfish Aquaculture & Certification]
+1. [**FDACS — Florida Department of Agriculture and Consumer Services (shellfish sanitation water quality)**](https://www.fdacs.gov/Agriculture-Industry/Aquaculture/Shellfish)  
+   The Division of Aquaculture within FDACS classifies and monitors shellfish-harvesting areas under Florida’s implementation of the National Shellfish Sanitation Program. Monitoring includes bacteriological (e.g., fecal coliform) sampling, area closures, and certification of processing plants.
 
-2. [**FIM — Fisheries Independent Monitoring (FWC/FWRI physical variables)**](https://myfwc.com/research/saltwater/fim/)
-   The FWC Fish & Wildlife Research Institute’s FIM program uses a stratified-random sampling design (inshore and offshore) to monitor fish and invertebrate populations across Florida estuaries. At each sampling site physical/chemical data (temperature, salinity, dissolved oxygen, etc.) are also recorded, providing a long-term environmental time-series. 
+2. [**FIM — Fisheries Independent Monitoring (FWC/FWRI physical variables)**](https://myfwc.com/research/saltwater/fim/)  
+   The FWC Fish & Wildlife Research Institute’s FIM program uses a stratified-random sampling design (inshore and offshore) to monitor fish and invertebrate populations across Florida estuaries. At each sampling site, physical and chemical data (temperature, salinity, dissolved oxygen, etc.) are recorded, providing a long-term environmental time series.
 
-3. [**Project COAST / Nature Coast Aquatic Preserve long-term monitoring**](From Dr. Barry, Prof. Tom Frazer, et al.).**(https://blogs.ifas.ufl.edu/ncbs/2021/03/22/water-quality-monitoring-commences-in-the-newly-established-nature-coast-aquatic-preserve/) 
-   Project COAST, started by Prof. Tom Frazer at UF, operated a long-term coastal water-quality monitoring network (late 1990s onward) in the Nature Coast / Big Bend region, tracking nutrient concentrations, chlorophyll, salinity and temperature to assess eutrophication risk and baseline conditions.
+3. [**Project COAST / Nature Coast Aquatic Preserve long-term monitoring**](https://blogs.ifas.ufl.edu/ncbs/2021/03/22/water-quality-monitoring-commences-in-the-newly-established-nature-coast-aquatic-preserve/)  
+   Project COAST, initiated by Prof. Tom Frazer (University of Florida), established a long-term coastal water-quality monitoring network in the Big Bend / Nature Coast region beginning in the late 1990s. It tracked nutrients, chlorophyll-a, salinity, and temperature to assess eutrophication risk and baseline conditions. The program evolved into the ongoing monitoring for the **Nature Coast Aquatic Preserve**.
 
-4. [**Lakewatch — UF/IFAS Florida LAKEWATCH (field YSI + lab parameters).**](https://lakewatch.ifas.ufl.edu/about-us/what-is-florida-lakewatch/)  
-   LAKEWATCH is a volunteer-based program coordinated by UF/IFAS that has collected monthly physical and chemical data from lakes, springs and estuarine sites for over 30 years. Parameters include temperature, Secchi depth, total nitrogen, total phosphorus and chlorophyll-a. [UF IFAS LAKEWATCH]
+4. [**Lakewatch — UF/IFAS Florida LAKEWATCH (field YSI + lab parameters)**](https://lakewatch.ifas.ufl.edu/about-us/what-is-florida-lakewatch/)  
+   LAKEWATCH is a volunteer-based program coordinated by UF/IFAS that has collected monthly physical and chemical data from lakes, springs, and estuarine sites for over 30 years. Parameters include temperature, Secchi depth, total nitrogen, total phosphorus, and chlorophyll-a.
 
-5. [**LCR — UF Lone Cabbage Reef restoration monitoring (fixed sites)**](https://lcroysterproject.github.io/oysterproject/)
+5. [**LCR — UF Lone Cabbage Reef restoration monitoring (fixed sites)**](https://lcroysterproject.github.io/oysterproject/)  
    The Lone Cabbage Reef restoration project (UF/IFAS Nature Coast Biological Station) established fixed monitoring stations for oyster reef habitat restoration in the Suwannee Estuary. The dataset includes environmental measurements (salinity, temperature) at fixed sites through the restoration period.
 
-6. [**VBuoys — USF Optical Oceanography “Virtual Buoy” remote sensing stations (temperature, optical data)**](https://optics.marine.usf.edu/projects/vbs.html)
-   The Virtual Buoy System (VBS) from the Optical Oceanography Lab at USF (led by Dr. Chuanmin Hu) leverages satellite remote-sensing algorithms to produce near-real-time “virtual station” time series for coastal water temperature, optical water quality metrics and water-colour parameters. [USF Virtual Buoy System]
+6. [**VBuoys — USF Optical Oceanography “Virtual Buoy” remote sensing stations (temperature, optical data)**](https://optics.marine.usf.edu/projects/vbs.html)  
+   The Virtual Buoy System (VBS) from the Optical Oceanography Lab at USF (led by Dr. Chuanmin Hu) leverages satellite remote-sensing algorithms to produce near-real-time “virtual station” time series for coastal water temperature, optical water quality metrics, and water-color parameters.
 
-7. [**USGS Flow Rates — U.S. Geological Survey Suwannee River (Wilcox gage 02323500).**](https://waterdata.usgs.gov/nwis/uv?site_no=02323500)  
-   Daily discharge data from the USGS gage near Wilcox provides long-term hydrologic context for the Suwannee River system. Data are accessible via USGS Water Data for the Nation.  
-   
-### Snapshot of source coverage (post-filters, 1997–2020):
+7. [**USGS Flow Rates — U.S. Geological Survey Suwannee River (Wilcox gage 02323500)**](https://waterdata.usgs.gov/nwis/uv?site_no=02323500)  
+   Daily discharge data from the USGS gage near Wilcox provide long-term hydrologic context for the Suwannee River system. Data are accessible via USGS Water Data for the Nation.
+
+---
+
+### Snapshot of source coverage (post-filters, 1997–2020)
 
 | Source     | n_samples | Years | Months | Days | Sites | Salinity | Temperature | FC  | TNP  |
 |:------------|----------:|------:|-------:|-----:|------:|---------:|-------------:|----:|----:|
@@ -49,6 +51,8 @@ Compile, harmonize, and summarize water-quality observations from seven monitori
 | **LCR**     | 10,365    | 4     | 41     | 1,193| 10    | 10,364   | 9,704        | 0   | 0  |
 | **VBuoys**  | 7,025     | 21    | 251    | 251  | 28    | 0        | 6,885        | 0   | 0  |
 
+---
+
 ### Inputs (paths used in code)
 
 - `./Data/water-quality/inputs/fdacs_wq_CK-SS-HB.csv`
@@ -58,7 +62,7 @@ Compile, harmonize, and summarize water-quality observations from seven monitori
 - `./Data/water-quality/inputs/frazer_suwannee_97-15.csv`
 - `./Data/water-quality/inputs/FIM CK full physical dataset 2020.csv`
 - `./Data/water-quality/inputs/virtual_buoy_temps_compiled.csv`
-- **River flow (USGS Wilcox gauge 02323500):** fetched via `waterData::importDVs()`.
+- **River flow (USGS Wilcox gage 02323500):** fetched via `waterData::importDVs()`.
 
 ---
 
@@ -88,13 +92,9 @@ Compile, harmonize, and summarize water-quality observations from seven monitori
   - Rolling standard deviations: `sd05`, `sd15`, `sd30`
 - Lagged flow variables (`lag0`–`lag45`) are generated to support time-lag analyses.
 
----
-
 ### **4️⃣ Data Integration**
 - The harmonized water-quality dataset (`physcomp`) is merged with daily flow metrics by `Date` to create `physcomp2`.
-- The merged table includes both **raw measurements** and **flow covariates**, enabling linked hydrologic–water quality analyses.
-
----
+- The merged table includes both **raw measurements** and **flow covariates**, enabling linked hydrologic–water-quality analyses.
 
 ### **5️⃣ Aggregation**
 - **Daily Site Means (`physcomp3`)**  
@@ -107,20 +107,22 @@ Compile, harmonize, and summarize water-quality observations from seven monitori
   - Merged with monthly-mean flow.
   - Rounded values for reporting consistency.
 
----
+### **6️⃣ Output Files**
+Final datasets are exported to `./Data/water-quality/processed/` for model input and QA review.
 
+---
 
 ## ⚙️ Notes
 
 - **Temporal Scope:**  
-  All data is restricted to **1997–2020** to align with Ecospace simulation years.
+  All data are restricted to **1997–2020** to align with Ecospace simulation years.
 
 - **Variable Units:**  
   - Salinity (psu), Temperature (°C)
   - DO (mg/L)
-  - FC (cfu/100 mL)  
-  - Chlorophyll-a (µg/L) 
-  - TNP = TN + TP, TN and TP (µg/L)  
+  - FC (cfu/100 mL)
+  - Chlorophyll-a (µg/L)
+  - TN, TP, TNP = TN + TP (µg/L)
   - Flow (cubic feet per second, cfs)
 
 - **Gap-Filling:**  
@@ -131,5 +133,9 @@ Compile, harmonize, and summarize water-quality observations from seven monitori
   - Spot-check plots (e.g., `Temperature ~ Date` by site) used to verify data integrity visually.  
 
 - **Flow Features:**  
-  Moving averages capture smooth hydrologic trends.  
-  Lag variables (up to 45 days) enabled exploring delayed water-quality responses.
+  Moving averages capture smoothed hydrologic trends.  
+  Lag variables (up to 45 days) allow exploration of delayed water-quality responses.
+
+---
+
+**These processed datasets form the foundational environmental time series used to drive and validate spatial–temporal habitat and nutrient forcing layers within the Suwannee River Ecospace model.**
