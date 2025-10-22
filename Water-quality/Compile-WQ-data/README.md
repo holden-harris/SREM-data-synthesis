@@ -3,6 +3,8 @@
 ### Purpose
 Compile, harmonize, and summarize water-quality observations from seven monitoring sources into daily and monthly datasets (with river-flow covariates) for use in Ecospace spatial–temporal driver maps and model fitting.
 
+All data sources were standardized to a consistent temporal framework, harmonized by variable naming conventions, and georeferenced. Measurements were filtered for quality (e.g., valid salinity ranges of 0–45 psu, active sampling sites) and merged into a unified database containing date, site, and source identifiers along with key variables: salinity, temperature, dissolved oxygen, fecal coliform, chlorophyll-a, total nitrogen, and total phosphorus. The compiled data were then aggregated by day and by month to create spatially averaged time series for each sampling site, which were linked to corresponding daily and monthly mean discharge values from the USGS Wilcox gauge. The resulting datasets provide a continuous, quality-controlled time series of water-quality and hydrologic conditions that form the environmental foundation for the Suwannee River Ecospace Model simulations.
+
 ### Outputs (written by the script)
 
 | Output File | Description |
