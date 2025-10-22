@@ -5,16 +5,6 @@ Compile, harmonize, and summarize water-quality observations from seven monitori
 
 All data sources were standardized to a consistent temporal framework, harmonized by variable naming conventions, and georeferenced. Measurements were filtered for quality (e.g., valid salinity ranges of 0–45 psu, active sampling sites) and merged into a unified database containing date, site, and source identifiers along with key variables: salinity, temperature, dissolved oxygen, fecal coliform, chlorophyll-a, total nitrogen, and total phosphorus. The compiled data were then aggregated by day and by month to create spatially averaged time series for each sampling site, which were linked to corresponding daily and monthly mean discharge values from the USGS Wilcox gauge. The resulting datasets provide a continuous, quality-controlled time series of water-quality and hydrologic conditions that form the environmental foundation for the Suwannee River Ecospace Model simulations.
 
-### Outputs (written by the script)
-
-| Output File | Description |
-|--------------|-------------|
-| `Spatial-temp_Phys_all-measurements-with-Flow.csv` | All individual water-quality measurements joined with daily flow stats |
-| `Spatial-temp_Phys-Flow_xDay.csv` | Daily site means with daily flow data |
-| `Spatial-temp_Phys-Flow_xMonth.csv` | Monthly site means with monthly mean flow |
-| `Flow-with-avgs-lags.csv` | Daily flow dataset with moving averages and lag variables |
-| `lakewatch_sal-temp_joined.csv` | Lakewatch dataset with missing salinity/temperature filled from LCR data |
-
 ---
 
 ## Data sources
@@ -65,6 +55,35 @@ All data sources were standardized to a consistent temporal framework, harmonize
 - `./Data/water-quality/inputs/FIM CK full physical dataset 2020.csv`
 - `./Data/water-quality/inputs/virtual_buoy_temps_compiled.csv`
 - **River flow (USGS Wilcox gage 02323500):** fetched via `waterData::importDVs()`.
+
+---
+
+## Outputs (written by the script)
+
+| Output File | Description |
+|--------------|-------------|
+| `Spatial-temp_Phys_all-measurements-with-Flow.csv` | All individual water-quality measurements joined with daily flow stats |
+| `Spatial-temp_Phys-Flow_xDay.csv` | Daily site means with daily flow data |
+| `Spatial-temp_Phys-Flow_xMonth.csv` | Monthly site means with monthly mean flow |
+| `Flow-with-avgs-lags.csv` | Daily flow dataset with moving averages and lag variables |
+| `lakewatch_sal-temp_joined.csv` | Lakewatch dataset with missing salinity/temperature filled from LCR data |
+
+---
+
+### Summary of Monthly Water-Quality Samples (1997–2020)
+
+| Variable | Total Observations | Min / Max per Month | Mean ± SD per Month | Interpretation |
+|-----------|--------------------|---------------------|---------------------|----------------|
+| **Temperature (°C)** | 16,127 | 32 – 94 | 56 ± 12.4 | Average of ~56 distinct site-month temperature records, with seasonal variability and higher sampling density in warm months. |
+| **Salinity (psu)** | 30,829 | 57 – 147 | 107 ± 17.7 | Salinity coverage is highest among variables, averaging >100 records per month across all sources. |
+| **Total Nitrogen + Phosphorus (TNP, µg L⁻¹)** | 2,653 | 1 – 11 | 9 ± 3.3 | Nutrient data (TN + TP) were available from fewer programs, with approximately 9 distinct site-month records on average. |
+
+> **Notes:**  
+> • 288 monthly records correspond to January 1997 – December 2020.  
+> • Temperature and salinity were recorded by nearly all monitoring programs (FDACS, FIM, LCR, Lakewatch, Frazer, VBuoys), while nutrient data were primarily from Project COAST and Lakewatch.  
+> • These aggregated values represent the number of distinct sampling locations (sites) contributing to each month’s mean estimates.
+
+
 
 ---
 
