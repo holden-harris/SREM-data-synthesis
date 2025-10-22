@@ -1,0 +1,11 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+# renv files (local library)
+renv/
+
+# OS-specific cruft
+.DS_Store
+Thumbs.db
