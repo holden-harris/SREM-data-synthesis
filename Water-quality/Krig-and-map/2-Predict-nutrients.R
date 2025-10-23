@@ -28,14 +28,12 @@ abline(fr_lm, col=1, lwd=2)
 abline(lw_lm, col =2)
 par(mfrow=c(1,1))
 
-#################################################################################
-##
-## MIXED EFFECTS MODELS MODEL 
+## MIXED EFFECTS MODELS MODEL ==================================================
 
 nutr$Site_ID <- as.factor(nutr$Site_ID) ## Ensure factor + drop NAs (keeps lmer happy)
 
 ## Fit model
-nutri_lmm <- lme4::lmer(TNP ~ Sal + Temp + logFlow + (1|Site_ID), data = nutr_clean)
+nutri_lmm <- lme4::lmer(TNP ~ Sal + Temp + logFlow + (1|Site_ID), data = nutr)
 
 ## Model diagnostics, residuals vs fitted and qq
 par(mfrow = c(1,2))
