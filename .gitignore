@@ -1,11 +1,63 @@
-.Rproj.user
+##--- R-specific ---
 .Rhistory
 .RData
 .Ruserdata
+.Rproj.user/
+.Rproj.user/*
+.Rproj.user
+*.Rproj
+*.Rhistory
+*.Rapp.history
 
-# renv files (local library)
-renv/
-
-# OS-specific cruft
+##--- OS/system files ---
 .DS_Store
 Thumbs.db
+
+##--- Temporary or generated data ---
+/outputs/
+/figs/
+/temp/
+/scratch/
+/logs/
+/cache/
+/_*/  ## folders beginning with underscore
+
+##--- Model data and rasters ---
+*.tif
+*.tiff
+*.gri
+*.grd
+*.zip
+*.rar
+*.7z
+*.csv~
+*.bak
+*.tmp
+
+##--- Ecospace/EwE files ---
+*.eii
+*.eii.bak
+*.ewemdb
+*.mdb
+*.bak
+
+##--- Project-specific directories ---
+**/hoard/ 
+Data/processed/
+Water-quality/Krige-and-map/out/KRG
+Water-quality/Krige-and-map/out/IDW
+
+##--- Sensitive credentials ---
+*.env
+*.key
+*.pem
+config.yaml
+credentials.json
+
+##--- IDE and build artifacts ---
+.Rproj.user/
+.Rproj.user/*
+.Rproj.user
+*.html
+*.docx
+*.xlsx
