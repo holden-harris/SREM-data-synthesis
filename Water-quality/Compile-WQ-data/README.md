@@ -1,0 +1,162 @@
+# Water Quality Data Synthesis (Suwannee Estuary)
+
+### Purpose
+Compile, harmonize, and summarize water-quality observations from seven monitoring sources into daily and monthly datasets (with river-flow covariates) for use in Ecospace spatial–temporal driver maps and model fitting.
+
+All data sources were standardized to a consistent temporal framework, harmonized by variable naming conventions, and georeferenced. Measurements were filtered for quality (e.g., valid salinity ranges of 0–45 psu, active sampling sites) and merged into a unified database containing date, site, and source identifiers along with key variables: salinity, temperature, dissolved oxygen, fecal coliform, chlorophyll-a, total nitrogen, and total phosphorus. The compiled data were then aggregated by day and by month to create spatially averaged time series for each sampling site, which were linked to corresponding daily and monthly mean discharge values from the USGS Wilcox gauge. The resulting datasets provide a continuous, quality-controlled time series of water-quality and hydrologic conditions that form the environmental foundation for the Suwannee River Ecospace Model simulations.
+
+---
+
+## Data sources
+
+1. [**FDACS — Florida Department of Agriculture and Consumer Services (shellfish sanitation water quality)**](https://www.fdacs.gov/Agriculture-Industry/Aquaculture/Shellfish)  
+   The Division of Aquaculture within FDACS classifies and monitors shellfish-harvesting areas under Florida’s implementation of the National Shellfish Sanitation Program. Monitoring includes bacteriological (e.g., fecal coliform) sampling, area closures, and certification of processing plants.
+
+2. [**FIM — Fisheries Independent Monitoring (FWC/FWRI physical variables)**](https://myfwc.com/research/saltwater/fim/)  
+   The FWC Fish & Wildlife Research Institute’s FIM program uses a stratified-random sampling design (inshore and offshore) to monitor fish and invertebrate populations across Florida estuaries. At each sampling site, physical and chemical data (temperature, salinity, dissolved oxygen, etc.) are recorded, providing a long-term environmental time series.
+
+3. [**Project COAST / Nature Coast Aquatic Preserve long-term monitoring**](https://blogs.ifas.ufl.edu/ncbs/2021/03/22/water-quality-monitoring-commences-in-the-newly-established-nature-coast-aquatic-preserve/)  
+   Project COAST, initiated by Prof. Tom Frazer (University of Florida), established a long-term coastal water-quality monitoring network in the Big Bend / Nature Coast region beginning in the late 1990s. It tracked nutrients, chlorophyll-a, salinity, and temperature to assess eutrophication risk and baseline conditions. The program evolved into the ongoing monitoring for the **Nature Coast Aquatic Preserve**.
+
+4. [**Lakewatch — UF/IFAS Florida LAKEWATCH (field YSI + lab parameters)**](https://lakewatch.ifas.ufl.edu/about-us/what-is-florida-lakewatch/)  
+   LAKEWATCH is a volunteer-based program coordinated by UF/IFAS that has collected monthly physical and chemical data from lakes, springs, and estuarine sites for over 30 years. Parameters include temperature, Secchi depth, total nitrogen, total phosphorus, and chlorophyll-a.
+
+5. [**LCR — UF Lone Cabbage Reef restoration monitoring (fixed sites)**](https://lcroysterproject.github.io/oysterproject/)  
+   The Lone Cabbage Reef restoration project (UF/IFAS Nature Coast Biological Station) established fixed monitoring stations for oyster reef habitat restoration in the Suwannee Estuary. The dataset includes environmental measurements (salinity, temperature) at fixed sites through the restoration period.
+
+6. [**VBuoys — USF Optical Oceanography “Virtual Buoy” remote sensing stations (temperature, optical data)**](https://optics.marine.usf.edu/projects/vbs.html)  
+   The Virtual Buoy System (VBS) from the Optical Oceanography Lab at USF (led by Dr. Chuanmin Hu) leverages satellite remote-sensing algorithms to produce near-real-time “virtual station” time series for coastal water temperature, optical water quality metrics, and water-color parameters.
+
+7. [**USGS Flow Rates — U.S. Geological Survey Suwannee River (Wilcox gage 02323500)**](https://waterdata.usgs.gov/nwis/uv?site_no=02323500)  
+   Daily discharge data from the USGS gage near Wilcox provide long-term hydrologic context for the Suwannee River system. Data are accessible via USGS Water Data for the Nation.
+
+---
+
+### Snapshot of source coverage (post-filters, 1997–2020)
+
+| Source     | n_samples | Years | Months | Days | Sites | Salinity | Temperature | FC  | TNP  |
+|:------------|----------:|------:|-------:|-----:|------:|---------:|-------------:|----:|----:|
+| **FDACS**   | 49,677    | 24    | 288    | 1,761| 142   | 402      | 302          | 103 | 0  |
+| **FIM**     | 14,151    | 24    | 287    | 2,133| 14,151| 361      | 301          | 0   | 0  |
+| **Frazer**  | 2,160     | 19    | 215    | 226  | 10    | 1,238    | 1,240        | 0   | 157|
+| **Lakewatch** | 274     | 4     | 41     | 50   | 6     | 101      | 78           | 0   | 113|
+| **LCR**     | 10,365    | 4     | 41     | 1,193| 10    | 10,364   | 9,704        | 0   | 0  |
+| **VBuoys**  | 7,025     | 21    | 251    | 251  | 28    | 0        | 6,885        | 0   | 0  |
+
+---
+
+### Inputs (paths used in code)
+
+- `./Data/water-quality/inputs/fdacs_wq_CK-SS-HB.csv`
+- `./Data/water-quality/inputs/lcr_wq_total.csv`  
+  `./Data/water-quality/inputs/lcr_sites_lat_long.csv`
+- `./Data/water-quality/inputs/lab.csv` *(Lakewatch combined YSI + lab dataset)*
+- `./Data/water-quality/inputs/frazer_suwannee_97-15.csv`
+- `./Data/water-quality/inputs/FIM CK full physical dataset 2020.csv`
+- `./Data/water-quality/inputs/virtual_buoy_temps_compiled.csv`
+- **River flow (USGS Wilcox gage 02323500):** fetched via `waterData::importDVs()`.
+
+---
+
+## Outputs (written by the script)
+
+| Output File | Description |
+|--------------|-------------|
+| `Spatial-temp_Phys_all-measurements-with-Flow.csv` | All individual water-quality measurements joined with daily flow stats |
+| `Spatial-temp_Phys-Flow_xDay.csv` | Daily site means with daily flow data |
+| `Spatial-temp_Phys-Flow_xMonth.csv` | Monthly site means with monthly mean flow |
+| `Flow-with-avgs-lags.csv` | Daily flow dataset with moving averages and lag variables |
+| `lakewatch_sal-temp_joined.csv` | Lakewatch dataset with missing salinity/temperature filled from LCR data |
+
+---
+
+### Summary of Monthly Water-Quality Samples (1997–2020)
+
+| Variable | Total Observations | Min / Max per Month | Mean ± SD per Month | Interpretation |
+|-----------|--------------------|---------------------|---------------------|----------------|
+| **Temperature (°C)** | 16,127 | 32 – 94 | 56 ± 12.4 | Average of ~56 distinct site-month temperature records, with seasonal variability and higher sampling density in warm months. |
+| **Salinity (psu)** | 30,829 | 57 – 147 | 107 ± 17.7 | Salinity coverage is highest among variables, averaging >100 records per month across all sources. |
+| **Total Nitrogen + Phosphorus (TNP, µg L⁻¹)** | 2,653 | 1 – 11 | 9 ± 3.3 | Nutrient data (TN + TP) were available from fewer programs, with approximately 9 distinct site-month records on average. |
+
+> **Notes:**  
+> • 288 monthly records correspond to January 1997 – December 2020.  
+> • Temperature and salinity were recorded by nearly all monitoring programs (FDACS, FIM, LCR, Lakewatch, Frazer, VBuoys), while nutrient data were primarily from Project COAST and Lakewatch.  
+> • These aggregated values represent the number of distinct sampling locations (sites) contributing to each month’s mean estimates.
+
+
+
+---
+
+## 🧭 Processing Notes
+
+### **1️⃣ Data Import and Cleaning**
+- Each dataset is read from its respective CSV file in `./Data/water-quality/inputs/`.
+- Columns are standardized to lowercase, and date/time fields are parsed and formatted (`Date`, `Year`, `Month`, `Day`, `YM`).
+- Data are filtered to remove inactive or out-of-range records (e.g., `FDACS status == "ACTIVE"`, `LCR in_service == 1`, `year >= 1997`).
+- Latitude and longitude columns are standardized for spatial joins.
+- For **Lakewatch**, missing salinity and temperature values are supplemented by:
+  - Merging *YSI sensor* readings when available.
+  - Cross-referencing *LCR* observations at matching site and hourly timestamps.
+
+### **2️⃣ Harmonization**
+- Each data source is transformed into a unified table with the following columns:  
+  `Source, Date, Time, Year, Month, YM, Lat, Long, Site_ID, Salinity, Temperature, DO, FC, Chl, TN, TP`.
+- Derived fields are added:
+  - `TNP = TN + TP`
+  - `YM = "YYYY-MM"`
+- Records are concatenated using `rbind()` to form a single harmonized dataset `physcomp`.
+
+### **3️⃣ River Flow Data**
+- Daily discharge data are imported from the **USGS Wilcox Gage (02323500)** using the `waterData` package.
+- Flow variables are summarized using rolling statistics with `zoo::rollapply()`:
+  - Moving averages: `ma01`, `ma05`, `ma15`, `ma30`
+  - Rolling standard deviations: `sd05`, `sd15`, `sd30`
+- Lagged flow variables (`lag0`–`lag45`) are generated to support time-lag analyses.
+
+### **4️⃣ Data Integration**
+- The harmonized water-quality dataset (`physcomp`) is merged with daily flow metrics by `Date` to create `physcomp2`.
+- The merged table includes both **raw measurements** and **flow covariates**, enabling linked hydrologic–water-quality analyses.
+
+### **5️⃣ Aggregation**
+- **Daily Site Means (`physcomp3`)**  
+  Grouped by `Source`, `Site_ID`, and `Date` to calculate:
+  - Mean, min, and max of `Salinity` and `Temperature`
+  - Mean of `DO`, `FC`, `Chl`, `TN`, `TP`, and `TNP`
+  - Sample counts (`n_samp`)
+- **Monthly Site Means (`physcomp4`)**  
+  Further aggregated by `YM` to produce average conditions per site per month.
+  - Merged with monthly-mean flow.
+  - Rounded values for reporting consistency.
+
+### **6️⃣ Output Files**
+Final datasets are exported to `./Data/water-quality/processed/` for model input and QA review.
+
+---
+
+## ⚙️ Notes
+
+- **Temporal Scope:**  
+  All data are restricted to **1997–2020** to align with Ecospace simulation years.
+
+- **Variable Units:**  
+  - Salinity (psu), Temperature (°C)
+  - DO (mg/L)
+  - FC (cfu/100 mL)
+  - Chlorophyll-a (µg/L)
+  - TN, TP, TNP = TN + TP (µg/L)
+  - Flow (cubic feet per second, cfs)
+
+- **Gap-Filling:**  
+  Lakewatch data enriched with YSI and LCR observations to improve salinity and temperature completeness.
+
+- **Quality Assurance:**  
+  - Filters applied for valid salinity ranges (`0–45 psu`) and active sites only.  
+  - Spot-check plots (e.g., `Temperature ~ Date` by site) used to verify data integrity visually.  
+
+- **Flow Features:**  
+  Moving averages capture smoothed hydrologic trends.  
+  Lag variables (up to 45 days) allow exploration of delayed water-quality responses.
+
+---
+
+**These processed datasets form the foundational environmental time series used to drive and validate spatial–temporal habitat and nutrient forcing layers within the Suwannee River Ecospace model.**
