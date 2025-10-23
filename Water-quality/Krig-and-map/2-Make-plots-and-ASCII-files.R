@@ -5,48 +5,103 @@ library(dplyr)
 library(tidyr)
 
 ## Depth map with salt marsh corrections
-depth = raster('./in/depth/crm 60x50 18s 485m - saltmarsh corrected.gri')
-plot(depth, colNA='black')
-
+depth <- raster("./Data/habitats/processed/crm-salt-marsh-corrected/crm 60x50 18s 485m - saltmarsh corrected.gri"); depth
 
 #################################################################################
 ##
 ## MAKE ASCII MAPS
 
 ## Read in KRG stacks-----------------------------------------------------------
-sal.krg.stack  = stack("./out/KRG/Salinity_KRG_Jan1997-Dec2020.gri")
-temp.krg.stack = stack("./out/KRG/Temperature_KRG_Jan1997-Dec2020.gri")
-do.krg.stack   = stack("./out/KRG/DO_KRG_Jan1997-Dec2020.gri")
-fc.krg.stack   = stack("./out/KRG/FC_KRG_Jan1997-Dec2020.gri")
-nutr.krg.stack = stack("./out/KRG/Nutrients_Predicted_Jan1997-Dec2020.gri")
+sal.krg.stack  = stack("./Water-quality/Krig-and-map/out/KRG/Salinity_KRG_Jan1997-Dec2020.gri")
+temp.krg.stack = stack("./Water-quality/Krig-and-map/out/KRG/Temperature_KRG_Jan1997-Dec2020.gri")
+do.krg.stack   = stack("./Water-quality/Krig-and-map/out/KRG/DO_KRG_Jan1997-Dec2020.gri")
+fc.krg.stack   = stack("./Water-quality/Krig-and-map/out/KRG/FC_KRG_Jan1997-Dec2020.gri")
+nutr.krg.stack = stack("./Water-quality/Krig-and-map/out/KRG/Nutrients_Predicted_Jan1997-Dec2020.gri")
 
 ## Make suffix names
 sufx = paste(formatC(1:length(names(sal.krg.stack)), 
                      width=3, flag="0"), 
-             names(sal.krg.stack), sep="_"); head(sufx)
+             names(sal.krg.stack), sep="_")
+head(sufx) ## Check suffix names
 
 ## Write out ASCII files--------------------------------------------------------
 
+## Define variables and associated stacks 
+env_var_list <- list(
+  list(name = "Salinity",    stack = sal.krg.stack),
+  list(name = "Temperature", stack = temp.krg.stack),
+  list(name = "DO",          stack = do.krg.stack),
+  list(name = "FC",          stack = fc.krg.stack),
+  list(name = "Nutrients",   stack = nutr.krg.stack)
+)
+
+## Set output base directory --------------------------------------------------------------
+base_dir <- "Water-quality/Krig-and-map/out/ASCII-maps"
+
+## Helper function to safely write ASCII rasters ------------------------------------------
+write_ascii_safe <- function(stack_obj, dir_out, prefix, sufx) {
+  ## Create directory if it doesn’t exist
+  if (!dir.exists(dir_out)) {
+    dir.create(dir_out, recursive = TRUE, showWarnings = FALSE)
+    message("Created directory: ", dir_out)
+  }
+  
+  ## Write ASCII rasters by layer
+  writeRaster(stack_obj,
+              filename  = paste0(dir_out, prefix),
+              bylayer   = TRUE,
+              suffix    = sufx,
+              format    = "ascii",
+              overwrite = TRUE)
+  
+  message("Wrote ASCII rasters for ", prefix, " to ", dir_out)
+}
+
+## Loop through variables and write out rasters -------------------------------------------
+for (env in env_var_list) {
+  
+  ## Extract variable name and stack
+  env_name <- env$name
+  env_stack <- env$stack
+  
+  ## Build directory path for variable
+  dir_out <- file.path(base_dir, env_name)
+  
+  ## Skip empty stacks just in case
+  if (is.null(env_stack) || nlayers(env_stack) == 0) {
+    warning("No layers found for ", env_name, "; skipping.")
+    next
+  }
+  
+  ## Write rasters (ASCII format)
+  write_ascii_safe(env_stack, dir_out, env_name, sufx)
+  
+  ## Clean up memory
+  rm(env_stack); gc()
+}
+
+
+
 ## Salinity
-dir.out = "./out/KRG/ASCII Maps/Salinity/"
+dir.out = "./Water-quality/Krig-and-map/out/ASCII-maps/Salinity/"
+if (!dir.exists(dir.out)) dir.create(dir.out) ## Create directory if it does not exist
 writeRaster(sal.krg.stack, paste0(dir.out, "Salinity"), bylayer=T, suffix=sufx, format='ascii',overwrite=T)
 
 ## Temperature
-dir.out = "./out/KRG/ASCII Maps/Temperature/"
+dir.out = "./Water-quality/Krig-and-map/out/ASCII-maps/Temperature/"; if (!dir.exists(dir.out)) dir.create(dir.out, recursive = TRUE, showWarnings = FALSE) ## Create directory if it does not exist
 writeRaster(temp.krg.stack, paste0(dir.out, "Temperature"), bylayer=T, suffix=sufx, format='ascii',overwrite=T)
 
 ## DO
-dir.out = "./out/KRG/ASCII Maps/DO/"
+dir.out = "./Water-quality/Krig-and-map/out/ASCII-maps/DO/"; if (!dir.exists(dir.out)) dir.create(dir.out, recursive = TRUE, showWarnings = FALSE) ## Create directory if it does not exist
 writeRaster(do.krg.stack, paste0(dir.out, "DO"), bylayer=T, suffix=sufx, format='ascii',overwrite=T)
 
 ## FC
-dir.out = "./out/KRG/ASCII Maps/FC/"
+dir.out = "./Water-quality/Krig-and-map/out/ASCII-maps/FC/"; if (!dir.exists(dir.out)) dir.create(dir.out, recursive = TRUE, showWarnings = FALSE) ## Create directory if it does not exist
 writeRaster(fc.krg.stack, paste0(dir.out, "FC"), bylayer=T, suffix=sufx, format='ascii',overwrite=T)
 
 ## Nutrients
-dir.out = "./out/KRG/ASCII Maps/Nutrients/"
-writeRaster(nutr.krg.stack, paste0(dir.out, "FC"), bylayer=T, suffix=sufx, format='ascii',overwrite=T)
-
+dir.out = "./Water-quality/Krig-and-map/out/ASCII-maps/Nutrients/"; if (!dir.exists(dir.out)) dir.create(dir.out, recursive = TRUE, showWarnings = FALSE) ## Create directory if it does not exist
+writeRaster(nutr.krg.stack, paste0(dir.out, "Nutrients"), bylayer=T, suffix=sufx, format='ascii',overwrite=T)
 
 #################################################################################
 ##
@@ -91,6 +146,7 @@ pdf_map = function(plt.stack, colscheme, dir, env_name, modtype, maxval){
       plot(plt.yr[[i]],legend=F,col=color,colNA='darkgray',zlim=c(0,40),breaks=brks,
            main=paste(substr(names(plt.yr)[i],1,3),substr(names(plt.yr)[[i]],4,7)))
     }
+    
     ##Add legend
     par(mfrow=c(1,1),mar=c(0,0,0,0),oma=c(0,0,0,1))
     image.plot(plt.yr,legend.only=T,zlim=c(0,maxval),col=color,add=T,legend.width=1,
@@ -134,9 +190,8 @@ for(i in vec) {
 }  
 
 
-
 ###### Parkinglot
-pdf_map(nutr.krg.stack, colscheme = 'virid', dir = dir.out, "Nutrients", "KRG", maxval)
-pdf_map(nutr.krg.stack, colscheme = 'turbo', dir = dir.out, "Nutrients", "KRG", maxval)
-pdf_map(nutr.krg.stack, colscheme = 'brks', dir = dir.out,  " Nutrients", "KRG", maxval)
+#pdf_map(nutr.krg.stack, colscheme = 'virid', dir = dir.out, "Nutrients", "KRG", maxval)
+#pdf_map(nutr.krg.stack, colscheme = 'turbo', dir = dir.out, "Nutrients", "KRG", maxval)
+#pdf_map(nutr.krg.stack, colscheme = 'brks', dir = dir.out,  " Nutrients", "KRG", maxval)
 
