@@ -89,9 +89,8 @@ plot(wq.grid)
 
 
 ##============================== KRIGING =======================================
-# --- ensure output dirs exist & close any stray PDF devices ---
+## --- ensure output dirs exist & close any stray PDF devices ---
 dir.krg <- "./Water-quality/Krig-and-map/out/KRG"
-dir.idw <- "./Water-quality/Krig-and-map/out/IDW"
 if (!dir.exists(dir.krg)) dir.create(dir.krg, recursive = TRUE)
 if (!dir.exists(dir.idw)) dir.create(dir.idw, recursive = TRUE)
 
@@ -189,9 +188,32 @@ for (cfg in krig_vars) {
     next
   }
   
-  writeRaster(wq.krg.stack, paste0(dir.krg, "/"), overwrite = TRUE)
+  ## Close the PDF we opened
+  if (pdf_opened) try(dev.off(), silent = TRUE)
+  
+  ## Skip output if no layers (just in case)
+  if (nlayers(wq.krg.stack) == 0) {
+    warning("No layers produced for ", env_name, "; skipping write.")
+    next
+  }
+  
+  ## Ensure output directory exists
+  if (!dir.exists(dir.krg)) dir.create(dir.krg, recursive = TRUE, showWarnings = FALSE)
+  
+  ## Build base filename using your helper (env, modtype, first-last layer names)
+  file_base <- outname(wq.krg.stack, dir = paste0(dir.krg, "/"), env_name, modtype)
+  
+  ## Write raster stack (will create <file_base>.grd/<file_base>.gri pair by default)
+  writeRaster(wq.krg.stack, filename = file_base, overwrite = TRUE)
+  
+  ## Save variogram parameters
   write.csv(vgpars.out, paste0(file_base, "_VGpars.csv"), row.names = FALSE)
-
+  
+  ## (Optional) quick confirmation
+  message("Wrote stack: ", file_base)
+  message("Wrote VG params: ", paste0(file_base, "_VGpars.csv"))
+  
+  ## Keep a named object around
   assign(paste0(tolower(env_name), ".krg.stack"), wq.krg.stack, inherits = TRUE)
   rm(wq.krg.stack, vgpars.out); gc()
 }
