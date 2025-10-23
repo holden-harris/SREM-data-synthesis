@@ -1,0 +1,31 @@
+Package: spacesXYZ
+Type: Package
+Title: CIE XYZ and some of Its Derived Color Spaces
+Version: 1.6-0
+Encoding: UTF-8
+Date: 2025-06-06
+Authors@R: person("Glenn", "Davis", role=c("aut", "cre"), email="gdavis@gluonics.com")
+Maintainer: Glenn Davis <gdavis@gluonics.com>
+Description: Functions for converting among CIE XYZ, xyY, Lab, and Luv. Calculate Correlated Color Temperature (CCT) and the Planckian and daylight loci.   The XYZs of some standard illuminants and some standard linear chromatic adaptation transforms (CATs) are included. Three standard color difference metrics are included, plus the forward direction of the 'CIECAM02' color appearance model.
+License: GPL (>= 3)
+LazyLoad: yes
+LazyData: yes
+Depends: R (>= 4.0.0)
+Imports: logger
+Suggests: knitr, rmarkdown, microbenchmark
+Enhances: colorSpec
+Repository: RSPM
+VignetteBuilder: knitr
+BuildVignettes: yes
+NeedsCompilation: no
+Packaged: 2025-06-06 03:31:08 UTC; Glenn
+Author: Glenn Davis [aut, cre]
+Date/Publication: 2025-06-06 05:00:02 UTC
+Built: R 4.3.0; ; 2025-06-07 04:55:58 UTC; windows
+RemoteType: standard
+RemoteRef: spacesXYZ
+RemotePkgRef: spacesXYZ
+RemoteRepos: https://packagemanager.posit.co/cran/latest
+RemoteReposName: CRAN
+RemotePkgPlatform: x86_64-w64-mingw32
+RemoteSha: 1.6-0

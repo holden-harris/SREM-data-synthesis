@@ -1,0 +1,23 @@
+Package: mapdata
+Title: Extra Map Databases
+Version: 2.3.1
+Date: 2022-10-31
+Author: Original S code by Richard A. Becker and Allan R. Wilks. R version by Ray Brownrigg <Ray.Brownrigg@ecs.vuw.ac.nz>.
+Description: Supplement to maps package, providing some larger and/or higher-resolution databases. NOTE: this is a legacy package. The world map is out-dated.
+Depends: R (>= 2.14.0), maps (>= 2.0-7)
+LazyData: yes
+License: GPL-2
+Maintainer: Alex Deckmyn <alex.deckmyn@meteo.be>
+NeedsCompilation: yes
+Packaged: 2022-10-31 20:52:53 UTC; alex
+Repository: RSPM
+Date/Publication: 2022-11-01 00:57:32 UTC
+Encoding: UTF-8
+Built: R 4.3.0; x86_64-w64-mingw32; 2024-01-23 02:19:50 UTC; windows
+RemoteType: standard
+RemoteRef: mapdata
+RemotePkgRef: mapdata
+RemoteRepos: https://packagemanager.posit.co/cran/latest
+RemoteReposName: CRAN
+RemotePkgPlatform: x86_64-w64-mingw32
+RemoteSha: 2.3.1

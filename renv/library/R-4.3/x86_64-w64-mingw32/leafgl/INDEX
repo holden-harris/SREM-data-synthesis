@@ -1,0 +1,11 @@
+addGlPolylines          add polylines to a leaflet map using
+                        Leaflet.glify
+checkDim                checkDim
+checkDimPop             checkDim
+clearGlLayers           clearGlLayers
+leafglOutput            Use leafgl in shiny
+makeColorMatrix         makeColorMatrix
+makePopup               makePopup
+removeGlPoints          removeGlPoints
+removeGlPolygons        removeGlPolygons
+removeGlPolylines       removeGlPolylines

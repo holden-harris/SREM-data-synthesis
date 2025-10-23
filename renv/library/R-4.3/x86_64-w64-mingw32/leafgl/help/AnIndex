@@ -1,0 +1,13 @@
+addGlPoints	addGlPoints
+addGlPolygons	addGlPoints
+addGlPolylines	addGlPoints
+checkDim	checkDim
+checkDimPop	checkDimPop
+clearGlLayers	clearGlLayers
+leafglOutput	glify-shiny
+makeColorMatrix	makeColorMatrix
+makePopup	makePopup
+removeGlPoints	removeGlPoints
+removeGlPolygons	removeGlPolygons
+removeGlPolylines	removeGlPolylines
+renderLeafgl	glify-shiny
