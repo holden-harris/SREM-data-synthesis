@@ -13,7 +13,7 @@ library(ggmap)
 
 ########################
 ## FDACS
-fdacs = read.csv("./data/fdacs_wq_CK-SS-HB.csv")
+fdacs = read.csv("./Data/water-quality/inputs/fdacs_wq_CK-SS-HB.csv")
 names(fdacs) = tolower(names(fdacs))
 fdacs$x = NULL
 fdacs$date = as.Date(fdacs$date, format = ("%m/%d/%Y"))
@@ -28,7 +28,7 @@ fdacs = fdacs %>%
 
 ########################
 ## LCR
-lcr = read.csv("./data/lcr_wq_total.csv")
+lcr = read.csv("./Data/water-quality/inputs/lcr_wq_total.csv")
 names(lcr) = tolower(names(lcr))
 lcr$x = NULL; lcr$id=NULL
 lcr = lcr %>% 
@@ -42,20 +42,18 @@ lcr$date_time = as.POSIXct(lcr$date_time, format= "%m/%d/%Y %H:%M")
 lcr$read_time = round(lcr$date_time, "hour")
 
 ## Read in and merge sites
-sites_lcr = read.csv("./data/lcr_sites_lat_long.csv")
+sites_lcr = read.csv("./Data/water-quality/inputs/lcr_sites_lat_long.csv")
 names(sites_lcr) = tolower(names(sites_lcr))
 lcr2 = merge(lcr, sites_lcr, by.x = "site")
 
-
 ########################
 ## Lakewatch LCR data
-lakewatch = read.csv("./data/lab.csv")
+lakewatch = read.csv("./Data/water-quality/inputs/lab.csv")
 lakewatch$Sun_Code = NULL
 lakewatch$Date = as.POSIXct(lakewatch$Date, format = "%m/%d/%Y %H:%M")
 lakewatch$read_time = round(lakewatch$Date, "hour")
 lakewatch$obs_date = as.Date(lakewatch$Date, format= "%Y/%m/%d")
 lakewatch = lakewatch %>% filter (obs_date <= "2020-12-31")
-
 
 ###############################################
 ## Try to find missing salinity and temperature 
@@ -79,14 +77,14 @@ lakewatch3$Diff_Sal =  lakewatch3$Salinity - lakewatch2$Sal_LCR
 lakewatch3$Diff_Temp = lakewatch3$Temperature - lakewatch3$Temp_LCR
 
 ## Read in and merge sites
-sites_lcr = read.csv("./data/lcr_sites_lat_long.csv")
+sites_lcr = read.csv("./Data/water-quality/inputs/lcr_sites_lat_long.csv")
 lakewatch4 = merge(lakewatch3, sites_lcr, by.x = "Site"); head(lakewatch4)
 
-write.csv(lakewatch4, "./data/lakewatch_sal-temp_joined.csv", row.names = F)
+write.csv(lakewatch4, "./Data/water-quality/processed/lakewatch_sal-temp_joined.csv", row.names = F)
 
 ########################
 ## Read in Frazer data
-frazer <- read.csv("./data/frazer_suwannee_97-15.csv")
+frazer <- read.csv("./Data/water-quality/inputs/frazer_suwannee_97-15.csv")
 
 frazer$Date = as.Date(frazer$Date, format="%Y-%m-%d") 
 frazer %>% group_by(Station) %>% 
@@ -96,7 +94,7 @@ frazer$Station = as.factor(frazer$Station)
 
 ########################
 ## FIM physical data set
-fim = read.csv("./data/FIM CK full physical dataset 2020.csv")
+fim = read.csv("./Data/water-quality/inputs/FIM CK full physical dataset 2020.csv")
 
 ## Get dates
 fim$date = as.Date(fim$date)
@@ -107,10 +105,8 @@ fim$Day = as.numeric(format(fim$date, format="%d"))
 
 ########################
 ## USF Optical virtual buoys
-vbuoys = read.csv("./data/virtual_buoy_temps_compiled.csv", stringsAsFactors = T)
+vbuoys = read.csv("./Data/water-quality/inputs/virtual_buoy_temps_compiled.csv", stringsAsFactors = T)
 vbuoys$Date = as.Date(paste(vbuoys$YEAR, vbuoys$MONTH, 15, sep = "-"), format = "%Y-%m-%d")
-
-
 
 ##################################################################
 ##
@@ -258,7 +254,6 @@ dflow = dflow %>% filter(Date >= "1997-01-01")
 dflow[,5:10] = round(dflow[,5:10],1)
 head(dflow, n = 30L)
 
-
 #######################################
 ## Data set with lags
 ## Create columns for each day
@@ -274,7 +269,7 @@ for (j in 0:nlags) {
 lagflow = lagflow %>% filter(Date >= "1997-01-01"); lagflow$Flow = NULL; head(lagflow, n=30L)
 
 ## Write dataset with moving averages and lags
-write.csv(merge(dflow, lagflow, by.x="Date"), "./out/Flow-with-avgs-lags.csv", row.names = F)
+write.csv(merge(dflow, lagflow, by.x="Date"), "./Data/water-quality/processed/Flow-with-avgs-lags.csv", row.names = F)
 
 ## Plot visual
 plot(ma01 ~ Date, data = dflow, ylab="Daily Flow") 
@@ -284,7 +279,7 @@ lines(ma30 ~ Date, data = dflow, col = "blue")
 ##########################################################################################
 ## Merge physical data and flow
 subflow = dflow[,1:5]
-names(subflow) = c("Date", "ma01", "ma05", "ma15", "ma30"); head(sublow)
+names(subflow) = c("Date", "ma01", "ma05", "ma15", "ma30"); head(subflow)
 subflow[,2:5]=round(subflow[,2:5],1)
 head(subflow)
 
@@ -300,7 +295,7 @@ str(physcomp2)
 head(physcomp2); tail(physcomp2)
 
 ## Write out data 
-write.csv(physcomp2, "./out/Sptatial-temp_Phys_all-measurements-with-Flow.csv")
+write.csv(physcomp2, "./Data/water-quality/processed/Sptatial-temp_Phys_all-measurements-with-Flow.csv")
 
 ## Number observations by source
 physcomp2 %>% group_by(Source) %>% summarise(n(), n_distinct(Year)) 
@@ -336,7 +331,7 @@ physcomp3 = physcomp %>%
   )
 
 physcomp3flow = merge(physcomp3, subflow, by="Date") ## Merge with flow data
-write.csv(physcomp3flow, "./out/Spatial-temp_Phys-Flow_xDay.csv", row.names = FALSE)
+write.csv(physcomp3flow, "./Data/water-quality/processed/Spatial-temp_Phys-Flow_xDay.csv", row.names = FALSE)
 
 ## Now group by YM
 physcomp4 = physcomp3 %>% 
@@ -362,7 +357,6 @@ monthlyflow = dailyflow %>% group_by(YM) %>% summarise(Flow = mean(Flow, na.rm=T
 
 physcomp4flow = merge(physcomp4, monthlyflow, by="YM")
 
-
 ## Total number sample numbers
 physcomp %>% group_by(Source) %>% 
   summarise(n_samples = n(), Years = n_distinct(Year), Months = n_distinct(YM),
@@ -377,7 +371,6 @@ physcomp3 %>% group_by(Source) %>%
             Salinity = n_distinct(Sal_mean)-1, Temperature = n_distinct(Temp_mean)-1,
             FC = n_distinct(FC)-1, TN = n_distinct(TN)-1)
 
-
 ## Summarize physical samples by YM
 summYM = physcomp4 %>% group_by(YM) %>% 
   summarise(Temp = n_distinct(Temperature),
@@ -388,11 +381,5 @@ sum(summYM$Temp); min(summYM$Temp); max(summYM$Temp); mean(summYM$Temp); sd(summ
 sum(summYM$Sal); min(summYM$Sal); max(summYM$Sal); mean(summYM$Sal); sd(summYM$Sal)
 sum(summYM$TNP); min(summYM$TNP); max(summYM$TNP); mean(summYM$TNP); sd(summYM$TNP)
 
-
-write.csv(physcomp4flow, "./out/Spatial-temp_Phys-Flow_xMonth.csv", row.names = FALSE)
-##--> This will be used to make rster maps for Ecospace
-
-
-
-
-
+write.csv(physcomp4flow, "./Data/water-quality/processed/Spatial-temp_Phys-Flow_xMonth.csv", row.names = FALSE)
+##--> This will be used to make raster maps for Ecospace
