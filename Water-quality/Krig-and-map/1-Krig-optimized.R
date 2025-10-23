@@ -199,20 +199,94 @@ for (cfg in krig_vars) {
 
 ##====================== SIMPLE INVERSE DISTANCE WEIGHTING =====================
 
-idw.wt <- 2  # (unchanged) higher values => less smooth / more local influence
-dir.idw  <- "./1-Prepare-Ecospace-Inputs/water-quality/out/IDW/"
+idw.wt = 2  #higher values result in stronger influence of local points (less smooth)
 
-## Build IDW stacks via the generic helper
-sal.idw.stack  <- idw_variable("Salinity",    wq.yrs, ym_index, wq, wq.grid)
-temp.idw.stack <- idw_variable("Temperature", wq.yrs, ym_index, wq, wq.grid)
-DO.idw.stack   <- idw_variable("DO",          wq.yrs, ym_index, wq, wq.grid)
-TNP.idw.stack  <- idw_variable("TNP",         wq.yrs, ym_index, wq, wq.grid)
-FC.idw.stack   <- idw_variable("FC",          wq.yrs, ym_index, wq, wq.grid)
+## Make empty stacks
+sal.idw.stack  = stack()
+temp.idw.stack = stack()
+DO.idw.stack   = stack()
+TNP.idw.stack  = stack()
+FC.idw.stack   = stack()
 
-## Write out IDW stacks (kept function & naming)
-writeRaster(sal.idw.stack,  outname(sal.idw.stack,  dir.idw, "Salinity",    "IDW"), overwrite = TRUE)
-writeRaster(temp.idw.stack, outname(temp.idw.stack, dir.idw, "Temperature", "IDW"), overwrite = TRUE)
-writeRaster(DO.idw.stack,   outname(DO.idw.stack,   dir.idw, "DO",          "IDW"), overwrite = TRUE)
-writeRaster(TNP.idw.stack,  outname(TNP.idw.stack,  dir.idw, "TNP",         "IDW"), overwrite = TRUE)
-writeRaster(FC.idw.stack,   outname(FC.idw.stack,   dir.idw, "FC",          "IDW"), overwrite = TRUE)
+## IDW loop-------------------------------------------------------
+par(mfrow=c(1,1))
 
+## Outer loop over years
+for(y in wq.yrs){
+  #  y=1997
+  months = sort(unique(wq$Month[wq$Year==y]))
+  print(paste("Processing",y)); flush.console()
+  
+  ## Inner loop over months
+  for(m in months){
+    #    m=1  
+    print(paste("  month",m)); flush.console()
+    wq.sub = wq[wq$Year==y & wq$Month==m,]
+    par(mfrow=c(2,3))
+    
+    ## Salinity
+    sal.sub = wq.sub[!is.na(wq.sub$Salinity),]
+    sal.idw  = idw(Salinity~1, sal.sub, wq.grid, idp=idw.wt, debug.level=0)
+    sal.rast = raster(sal.idw)
+    names(sal.rast) = paste(month.abb[m],y,sep="")
+    plot(sal.rast, main=paste("Salinity", y, m))
+    sal.idw.stack   = addLayer(sal.idw.stack, sal.rast)
+    rm(sal.idw, sal.rast); gc()
+    
+    ## Temperature
+    temp.sub = wq.sub[!is.na(wq.sub$Temperature),]
+    temp.idw  = idw(Temperature~1, temp.sub, wq.grid, idp=idw.wt, debug.level=0)
+    temp.rast = raster(temp.idw)
+    names(temp.rast) = paste(month.abb[m],y,sep="")
+    plot(temp.rast, main="Temperature")
+    temp.idw.stack    = addLayer(temp.idw.stack, temp.rast)
+    rm(temp.idw, temp.rast); gc()
+    
+    ## DO
+    DO.sub = wq.sub[!is.na(wq.sub$DO),]
+    DO.idw  = idw(DO~1, DO.sub, wq.grid, idp=idw.wt, debug.level=0)
+    DO.rast = raster(DO.idw)
+    names(DO.rast) = paste(month.abb[m],y,sep="")
+    plot(DO.rast, main="DO")
+    DO.idw.stack    = addLayer(DO.idw.stack, DO.rast)
+    rm(DO.idw, DO.rast); gc()
+    
+    ## TNP
+    TNP.sub = wq.sub[!is.na(wq.sub$TNP),]
+    if(nrow(coordinates(TNP.sub))>0) { 
+      TNP.idw  = idw(TNP~1, TNP.sub, wq.grid, idp=idw.wt, debug.level=0)
+      TNP.rast = raster(TNP.idw)
+      names(TNP.rast) = paste(month.abb[m],y,sep="")
+      plot(TNP.rast, main="TNP")
+      TNP.idw.stack    = addLayer(TNP.idw.stack, TNP.rast)
+      rm(TNP.idw, TNP.rast); gc()
+    }
+    
+    ## FC
+    FC.sub = wq.sub[!is.na(wq.sub$FC),]
+    if(nrow(coordinates(FC.sub))>0) { 
+      FC.idw  = idw(FC~1, FC.sub, wq.grid, idp=idw.wt, debug.level=0)
+      FC.rast = raster(FC.idw)
+      names(FC.rast) = paste(month.abb[m],y,sep="")
+      plot(FC.rast, main="FC")
+      FC.idw.stack    = addLayer(FC.idw.stack, FC.rast)
+      rm(FC.idw, FC.rast); gc()
+    }
+  }
+}
+
+## Write outputs -----------------------------------------------------------------
+## IDW stacks
+dir.out = "./Water-quality/Krig-and-map/out/IDW/"
+writeRaster(sal.idw.stack, outname(sal.idw.stack, dir.out, "Salinity", "IDW"), overwrite=T)
+writeRaster(temp.idw.stack, outname(temp.idw.stack, dir.out, "Temperature", "IDW"), overwrite=T)
+writeRaster(DO.idw.stack, outname(DO.idw.stack, dir.out, "DO", "IDW"), overwrite=T)
+writeRaster(TNP.idw.stack, outname(TNP.idw.stack, dir.out, "TNP", "IDW"), overwrite=T)
+writeRaster(FC.idw.stack, outname(FC.idw.stack, dir.out, "FC", "IDW"), overwrite=T)
+
+## Write out PDF Plots
+#pdf_map(sal.idw.stack, dir.out, "Salinity", "IDW", 40)
+#pdf_map(temp.idw.stack, dir.out, "Temperature", "IDW", 40)
+#pdf_map(DO.idw.stack, dir.out, "DO", "IDW", 16)
+#pdf_map(FC.idw.stack, dir.out, "FC", "IDW", 50)
+#pdf_map(TNP.idw.stack, dir.out, "TNP", "IDW", 2200)
