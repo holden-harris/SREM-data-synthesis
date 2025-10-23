@@ -78,3 +78,6 @@ Where:
 The resulting raster layer provided the modeled nutrient concentration for each grid cell in that month.  
 
 These monthly rasters were sequentially appended into a multi-layer stack (`nutri_stack`), yielding a continuous time series of predicted nutrient distributions that reflect spatial gradients in salinity and temperature, modulated by monthly freshwater flow.
+
+![Predicted monthly nutrient maps for 1997](./figures/nutri_stack_1997.png)
+
