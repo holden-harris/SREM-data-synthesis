@@ -43,7 +43,6 @@ Thumbs.db
 
 ##--- Project-specific directories ---
 **/hoard/ 
-Data/water-quality/processed/
 Water-quality/Krige-and-map/out/KRG
 Water-quality/Krige-and-map/out/IDW
 
