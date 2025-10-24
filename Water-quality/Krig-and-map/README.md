@@ -8,7 +8,7 @@ The workflow produces kriged maps for:
 - Dissolved Oxygen (DO)  
 - Fecal Coliform (FC)  
 
-Salinity and temperature maps are used within the **Ecospace model** to generate predicted nutrient (TNP) maps. While the workflow also supports kriging for TNP, DO, and FC, those layers are not currently used in the Suwannee River Ecospace Model.
+The kriged salinity and temperature maps are used (1) directly by the Suwannee River Ecosystem and (2) to generate predicted nutrient (TNP) maps below. While this workflow produces kriged and IDW maps for TNP, DO, and FC, those products aren't currently used. 
 
 ---
 
