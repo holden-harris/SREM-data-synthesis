@@ -96,6 +96,7 @@ for(i in 1:length(ym)){
 ## Check stack
 nutri_stack
 nlayers(nutri_stack) ## Should be 288
+png("./Water-quality/Krig-and-map/out/figures/nutri_stack_1997.png", width = 8.5, height = 11, units = "in", res = 120)
 par(mfrow = c(4, 3), mar = c(1, 1, 2, 1)) ## Set up plotting window for 12 panels (4x3 grid)
 for (i in 1:min(12, nlayers(nutri_stack))) { 
   plot(
@@ -105,6 +106,7 @@ for (i in 1:min(12, nlayers(nutri_stack))) {
     colNA = "darkgray"
   )
 }
+dev.off()
 par(mfrow = c(1, 1))
 
 ## Output--------------------------------------------------------------
