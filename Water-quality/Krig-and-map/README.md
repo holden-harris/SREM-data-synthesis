@@ -1,3 +1,114 @@
+# Make krige maps
+
+This R workflow builds **monthly kriged maps** (and optional **IDW maps**) for multiple water-quality variables from synthesized station data. Outputs include raster stacks and variogram diagnostic PDFs saved to the repository’s `Water-quality/Krig-and-map/out/` directory.  
+The workflow produces kriged maps for:
+- Salinity  
+- Temperature  
+- Nutrients (Total Nitrogen + Phosphorus; *TNP*)  
+- Dissolved Oxygen (DO)  
+- Fecal Coliform (FC)  
+
+The kriged salinity and temperature maps are used (1) directly by the Suwannee River Ecosystem and (2) to generate predicted nutrient (TNP) maps below. While this workflow produces kriged and IDW maps for TNP, DO, and FC, those products aren't currently used. 
+
+---
+
+## Background: Spatial interpolation
+
+Spatial interpolation techniques are fundamental for environmental modeling, as field observations are collected at discrete stations, while management and modeling require spatially continuous predictions.  
+
+**Inverse Distance Weighting (IDW)** is a deterministic interpolation technique that estimates values at unsampled locations as weighted averages of nearby observations, with weights inversely proportional to distance raised to a power parameter (commonly 2).  
+IDW is computationally efficient and easy to interpret, but it does not account for spatial autocorrelation explicitly and lacks a formal error estimation framework. **Kriging**, by contrast, is a geostatistical method that models spatial dependence using a variogram and produces statistically optimal (minimum-variance, unbiased) estimates.  
+
+This workflow performs **ordinary kriging**, which assumes the process has an **unknown but constant mean** within each local neighborhood, and models spatial covariance using theoretical variogram functions.  
+
+For each monthly time step, the script uses `automap::autoKrige()` to:
+1. Compute the **empirical variogram** from observed data (saved as monthly diagnostic PDFs).  
+2. Fit three common variogram models—**Spherical (`"Sph"`)**, **Exponential (`"Exp"`)**, and **Stable (`"Ste"`)**—using weighted least squares.  
+3. Select the best-fitting model and generate interpolated predictions across the spatial grid.
+
+This approach provides **unbiased spatial predictions** with **quantified variance**, making it well-suited for environmental datasets with moderate spatial autocorrelation and irregularly spaced sampling locations.
+
+## Code Overview
+1. **Load data & libraries:** Imports required packages and sets a consistent color palette for plots.  
+2. **Augment upstream coverage:** Adds three “dummy” upstream stations that replicate the lowest observed salinity each month to stabilize kriging near the northern boundary.  
+3. **Project data and define grid:** Transforms station coordinates to UTM (Zone 16N, km units) and projects a depth raster (`depth.out`) to the same coordinate system to serve as the kriging prediction grid.  
+4. **Kriging interpolation:**  
+   Loops over all years and months for each variable, using `autoKrige()` to fit the variogram, perform kriging, and save:  
+   - A **raster stack** containing all months and years.  
+   - A **PDF file** with variogram and diagnostic plots (`Monthly_variogram_<Variable>.pdf`).  
+5. **Write outputs**, e.g.,
+   `./Water-quality/Krig-and-map/out/KRG/Salinity_KRG_Jan1997-Dec2020.grd/gri`  
+   and a companion `<…>_VGpars.csv` of variogram parameters by Year–Month.  
+6. (Additional) **Build IDW maps** for the same variables and writes stacks to `out/IDW/`.
+
+### Inputs
+| Input File | Description |
+|-------------|-------------|
+| `./Data/water-quality/processed/Spatial-temp_Phys-Flow_xMonth.csv` | Contains monthly water-quality observations including `Year`, `Month`, `YM`, `Lat`, `Long`, `Salinity`, `Temperature`, `DO`, `FC`, `TNP`, and flow metrics. |
+| `./Data/habitats/processed/crm-salt-marsh-corrected/crm 60x50 18s 485m - saltmarsh corrected.gri` | High-resolution bathymetry and habitat raster used to define the kriging prediction grid and spatial extent after reprojection. |
+
+## Kriging loop
+
+The loop automates the creation of monthly kriged water-quality maps for each environmental variable (Salinity, Temperature, DO, FC, TNP).
+For each variable, it performs the following steps:
+
+1. **Setup and output creation:**  
+   Initializes an empty raster stack (`wq.krg.stack`) and a data frame (`vgpars.out`) to store variogram parameters.  
+   Opens a multi-page PDF named `Monthly_variogram_<variable>.pdf` for diagnostic plots.
+
+2. **Iterate through time:**  
+   Loops over each year and month in the dataset, subsetting observations (`kdat`) for the current variable and removing missing values.  
+   Skips months with no data.
+
+3. **Perform kriging:**  
+   Fits an ordinary kriging model using `automap::autoKrige()` with Spherical, Exponential, and Stable variogram models.  
+   Produces a predicted surface on the UTM grid and appends the variogram fit and map to the open PDF.
+
+4. **Post-process predictions:**  
+   Converts the kriging output to a raster, clamps any negative values to zero, reprojects the layer to WGS84 (longitude–latitude),  
+   and ensures it matches the spatial resolution and extent of the depth basemap (`depth.out`).
+
+5. **Save outputs:**  
+   Adds each month’s raster to the cumulative stack and records model parameters (model type, nugget, sill, range, kappa).  
+   After all months are processed, the full raster stack and variogram parameter table are saved to the following. 
+
+### Outputs
+| Output File | Description |
+|--------------|-------------|
+| `<Variable>_KRG_Jan1997-Dec2020.gri/.grd` | Multi-layer raster stack containing monthly kriged predictions for each variable (Salinity, Temperature, DO, FC, TNP) from January 1997 to December 2020. |
+| `<Variable>_KRG_Jan1997-Dec2020_VGpars.csv` | Table of fitted variogram parameters for each Year–Month, including model type, nugget, partial sill, range, and kappa values. |
+| `Monthly_variogram_<Variable>.pdf` | Multi-page diagnostic PDF showing empirical and fitted variograms for each monthly kriging model, used to evaluate model fits and spatial dependence. |
+
+## Inverse Distance Weighting (IDW) mapping workflow
+
+This section generates monthly water-quality maps using **Inverse Distance Weighting (IDW)** interpolation as an alternative to kriging.  
+The workflow computes spatially continuous rasters for Salinity, Temperature, Dissolved Oxygen (DO), Fecal Coliform (FC), and Total Nutrients (TNP).
+
+1. **Define interpolation parameters:**  
+   The IDW power (`idw.wt = 2`) controls how quickly influence decreases with distance.  
+   Higher values make local observations more dominant (less smooth surfaces).
+   
+3. **Initialize empty raster stacks:**  
+   One `RasterStack` is created for each variable (e.g., `sal.idw.stack`, `temp.idw.stack`, etc.) to store monthly predictions across all years.
+
+4. **Iterate through time:**  
+   The code loops through each **year** and **month**, subsetting the dataset (`wq.sub`) to include only valid measurements for the current variable.
+
+5. **Run IDW interpolation:**  
+   For each variable and month, the `gstat::idw()` function estimates values at unsampled grid cells based on the weighted average of nearby observations:
+
+```text
+           Σ [ Z(x_i) / d(x_i, x_0)^p ]
+Z(x_0) =  --------------------------------
+             Σ [ 1 / d(x_i, x_0)^p ]
+```
+   where \(d(x_i, x_0)\) is distance between points and \(p = 2\) is the inverse-distance power.
+
+5. **Generate and plot monthly rasters:**  
+   Like the krige maps, each interpolated surface is converted to a raster layer, labeled with its month-year (e.g., `Jan1997`), and plotted for quick visualization. Each monthly raster is appended to the appropriate variable-specific stack (e.g., `sal.idw.stack` for salinity).  
+
+---
+
 # Nutrient Prediction Modeling and Mapping
 
 ### Overview
