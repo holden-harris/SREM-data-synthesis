@@ -110,20 +110,6 @@ for (g in 1997:2020) {
 dev.off()
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ###################################################
 ## MAP SALINITY
 ## Page by year, faceted by month
@@ -162,7 +148,6 @@ dev.off()
 filename = "./maps/Temperature-maps-xMY_1997-2020"
 #filename = "./maps/Salinity-maps-xMY_1997-1998"
 pdf(paste0(filename, ".PDF"), onefile=T)
-
 
 for(g in 1997:2020){
   #  test = 2010; for(g in test:test){
