@@ -12,11 +12,11 @@ depth <- raster("./Data/habitats/processed/crm-salt-marsh-corrected/crm 60x50 18
 ## MAKE ASCII MAPS
 
 ## Read in KRG stacks-----------------------------------------------------------
-sal.krg.stack  = stack("./Water-quality/Krig-and-map/out/KRG/Salinity_KRG_Jan1997-Dec2020.gri")
-temp.krg.stack = stack("./Water-quality/Krig-and-map/out/KRG/Temperature_KRG_Jan1997-Dec2020.gri")
-do.krg.stack   = stack("./Water-quality/Krig-and-map/out/KRG/DO_KRG_Jan1997-Dec2020.gri")
-fc.krg.stack   = stack("./Water-quality/Krig-and-map/out/KRG/FC_KRG_Jan1997-Dec2020.gri")
-nutr.krg.stack = stack("./Water-quality/Krig-and-map/out/KRG/Nutrients_Predicted_Jan1997-Dec2020.gri")
+sal.krg.stack  = stack("./Krig-WQ-and-project-nutrient-maps/out/KRG/Salinity_KRG_Jan1997-Dec2020.gri")
+temp.krg.stack = stack("./Krig-WQ-and-project-nutrient-maps/out/KRG/Temperature_KRG_Jan1997-Dec2020.gri")
+do.krg.stack   = stack("./Krig-WQ-and-project-nutrient-maps/out/KRG/DO_KRG_Jan1997-Dec2020.gri")
+fc.krg.stack   = stack("./Krig-WQ-and-project-nutrient-maps/out/KRG/FC_KRG_Jan1997-Dec2020.gri")
+nutr.krg.stack = stack("./Krig-WQ-and-project-nutrient-maps/out/KRG/Nutrients_Predicted_Jan1997-Dec2020.gri")
 
 ## Make suffix names
 sufx = paste(formatC(1:length(names(sal.krg.stack)), 
@@ -36,7 +36,7 @@ env_var_list <- list(
 )
 
 ## Set output base directory --------------------------------------------------------------
-base_dir <- "Water-quality/Krig-and-map/out/ASCII-maps"
+base_dir <- "Krig-WQ-and-project-nutrient-maps/out/ASCII-maps"
 
 ## Helper function to safely write ASCII rasters ------------------------------------------
 write_ascii_safe <- function(stack_obj, dir_out, prefix, sufx) {
@@ -83,24 +83,24 @@ for (env in env_var_list) {
 
 
 ## Salinity
-dir.out = "./Water-quality/Krig-and-map/out/ASCII-maps/Salinity/"
+dir.out = "./Krig-WQ-and-project-nutrient-maps/out/ASCII-maps/Salinity/"
 if (!dir.exists(dir.out)) dir.create(dir.out) ## Create directory if it does not exist
 writeRaster(sal.krg.stack, paste0(dir.out, "Salinity"), bylayer=T, suffix=sufx, format='ascii',overwrite=T)
 
 ## Temperature
-dir.out = "./Water-quality/Krig-and-map/out/ASCII-maps/Temperature/"; if (!dir.exists(dir.out)) dir.create(dir.out, recursive = TRUE, showWarnings = FALSE) ## Create directory if it does not exist
+dir.out = "./Krig-WQ-and-project-nutrient-maps/out/ASCII-maps/Temperature/"; if (!dir.exists(dir.out)) dir.create(dir.out, recursive = TRUE, showWarnings = FALSE) ## Create directory if it does not exist
 writeRaster(temp.krg.stack, paste0(dir.out, "Temperature"), bylayer=T, suffix=sufx, format='ascii',overwrite=T)
 
 ## DO
-dir.out = "./Water-quality/Krig-and-map/out/ASCII-maps/DO/"; if (!dir.exists(dir.out)) dir.create(dir.out, recursive = TRUE, showWarnings = FALSE) ## Create directory if it does not exist
+dir.out = "./Krig-WQ-and-project-nutrient-maps/out/ASCII-maps/DO/"; if (!dir.exists(dir.out)) dir.create(dir.out, recursive = TRUE, showWarnings = FALSE) ## Create directory if it does not exist
 writeRaster(do.krg.stack, paste0(dir.out, "DO"), bylayer=T, suffix=sufx, format='ascii',overwrite=T)
 
 ## FC
-dir.out = "./Water-quality/Krig-and-map/out/ASCII-maps/FC/"; if (!dir.exists(dir.out)) dir.create(dir.out, recursive = TRUE, showWarnings = FALSE) ## Create directory if it does not exist
+dir.out = "./Krig-WQ-and-project-nutrient-maps/out/ASCII-maps/FC/"; if (!dir.exists(dir.out)) dir.create(dir.out, recursive = TRUE, showWarnings = FALSE) ## Create directory if it does not exist
 writeRaster(fc.krg.stack, paste0(dir.out, "FC"), bylayer=T, suffix=sufx, format='ascii',overwrite=T)
 
 ## Nutrients
-dir.out = "./Water-quality/Krig-and-map/out/ASCII-maps/Nutrients/"; if (!dir.exists(dir.out)) dir.create(dir.out, recursive = TRUE, showWarnings = FALSE) ## Create directory if it does not exist
+dir.out = "./Krig-WQ-and-project-nutrient-maps/out/ASCII-maps/Nutrients/"; if (!dir.exists(dir.out)) dir.create(dir.out, recursive = TRUE, showWarnings = FALSE) ## Create directory if it does not exist
 writeRaster(nutr.krg.stack, paste0(dir.out, "Nutrients"), bylayer=T, suffix=sufx, format='ascii',overwrite=T)
 
 #################################################################################

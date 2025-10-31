@@ -90,7 +90,7 @@ plot(wq.grid)
 
 ##============================== KRIGING =======================================
 ## --- ensure output dirs exist & close any stray PDF devices ---
-dir.krg <- "./Water-quality/Krig-and-map/out/KRG"
+dir.krg <- "./Krig-WQ-and-project-nutrient-maps/out/KRG"
 if (!dir.exists(dir.krg)) dir.create(dir.krg, recursive = TRUE)
 if (!dir.exists(dir.idw)) dir.create(dir.idw, recursive = TRUE)
 
@@ -299,7 +299,7 @@ for(y in wq.yrs){
 
 ## Write outputs -----------------------------------------------------------------
 ## IDW stacks
-dir.out = "./Water-quality/Krig-and-map/out/IDW/"
+dir.out = "./Krig-WQ-and-project-nutrient-maps/out/IDW/"
 writeRaster(sal.idw.stack, outname(sal.idw.stack, dir.out, "Salinity", "IDW"), overwrite=T)
 writeRaster(temp.idw.stack, outname(temp.idw.stack, dir.out, "Temperature", "IDW"), overwrite=T)
 writeRaster(DO.idw.stack, outname(DO.idw.stack, dir.out, "DO", "IDW"), overwrite=T)

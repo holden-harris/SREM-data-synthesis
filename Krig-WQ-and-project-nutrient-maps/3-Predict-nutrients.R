@@ -59,8 +59,8 @@ cat("ICC (Site_ID): ", round(icc_vals$ICC_adjusted, 3), "\n")
 ## Get Stacks for Salinity, Temperature, and Flow
 
 ## Read in sal and temp stacks
-sal.krg.stack  = stack("./Water-quality/Krig-and-map/out/KRG/Salinity_KRG_Jan1997-Dec2020.gri")
-temp.krg.stack = stack("./Water-quality/Krig-and-map/out/KRG/Temperature_KRG_Jan1997-Dec2020.gri")
+sal.krg.stack  = stack("./Krig-WQ-and-project-nutrient-maps/out/KRG/Salinity_KRG_Jan1997-Dec2020.gri")
+temp.krg.stack = stack("./Krig-WQ-and-project-nutrient-maps/out/KRG/Temperature_KRG_Jan1997-Dec2020.gri")
 
 ## Get water data and make df of monthly flow averages
 phys <- read.csv("./Data/water-quality/processed/Spatial-temp_Phys-Flow_xMonth.csv")
@@ -96,7 +96,7 @@ for(i in 1:length(ym)){
 ## Check stack
 nutri_stack
 nlayers(nutri_stack) ## Should be 288
-png("./Water-quality/Krig-and-map/out/figures/nutri_stack_1997.png", width = 8.5, height = 11, units = "in", res = 120)
+png("./Krig-WQ-and-project-nutrient-maps/out/figures/nutri_stack_1997.png", width = 8.5, height = 11, units = "in", res = 120)
 par(mfrow = c(4, 3), mar = c(1, 1, 2, 1)) ## Set up plotting window for 12 panels (4x3 grid)
 for (i in 1:min(12, nlayers(nutri_stack))) { 
   plot(
@@ -110,5 +110,5 @@ dev.off()
 par(mfrow = c(1, 1))
 
 ## Output--------------------------------------------------------------
-outname_nutrients =  paste0("./Water-quality/Krig-and-map/out/KRG/Nutrients_Predicted_Jan1997-Dec2020")
+outname_nutrients =  paste0("./Krig-WQ-and-project-nutrient-maps/out/KRG/Nutrients_Predicted_Jan1997-Dec2020")
 writeRaster(nutri_stack, outname_nutrients, overwrite=TRUE)
